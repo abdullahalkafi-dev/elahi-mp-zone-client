@@ -1,6 +1,8 @@
-import { DecodedJWT } from '@/types';
 
-export function decodeJWT(token: string | undefined): DecodedJWT | null {
+
+export function decodeJWT(token: string | undefined) {
+  console.log(token);
+ 
   try {
     const base64Url = token?.split('.')[1];
     if (!base64Url) {
@@ -14,6 +16,7 @@ export function decodeJWT(token: string | undefined): DecodedJWT | null {
         .map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, '0')}`)
         .join('')
     );
+ console.log(JSON.parse(jsonPayload));
 
     return JSON.parse(jsonPayload);
   } catch (error) {

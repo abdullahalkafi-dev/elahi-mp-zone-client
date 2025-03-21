@@ -1,10 +1,25 @@
 import {withSentryConfig} from '@sentry/nextjs';
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+        domains: ['*'], // Not recommended for production
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**',
+            },
+            {
+                protocol: 'http',
+                hostname: '**',
+            },
+        ],
+    },
+};
 
 export default withSentryConfig(nextConfig, {
 // For all available options, see:
 // https://github.com/getsentry/sentry-webpack-plugin#options
+
 
 // Suppresses source map uploading logs during build
 silent: true,

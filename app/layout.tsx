@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 import { ThemeProvider } from "./provider";
-
+import AppProvider from "@/provider/appProvider";
+import { ToastContainer } from 'react-toastify';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,7 +29,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <AppProvider>
           {children}
+          <ToastContainer />
+          </AppProvider>
+      
         </ThemeProvider>
       </body>
     </html>

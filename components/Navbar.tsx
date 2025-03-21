@@ -1,7 +1,17 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../public/logo-2.png";
+import { useUser } from "@/hooks/user.hook";
+import Cookies from "js-cookie";
 const Navbar = () => {
+  const user = useUser();
+  console.log(user.user);
+  const handleLogout = () => {
+    Cookies.remove("accessToken");
+
+    window.location.href = "/";
+  };
   return (
     <div>
       <div>
@@ -59,35 +69,56 @@ const Navbar = () => {
                   href="/all-service"
                   className="text-[#424242] hover:text-[#00CDFE] font-medium"
                 >
-                    Services
+                  Services
                 </Link>
-               
-              
+
                 <Link
                   href="/contact"
                   className="text-[#424242]  hover:text-[#00CDFE] font-medium"
                 >
                   Contact Us
                 </Link>
-               
               </div>
 
               {/* Get Started Button */}
-         <div className="gap-3 flex">
-               <Link
-                href="/login"
-                className="hidden lg:inline-block bg-[#00CDFE] text-white px-6 py-2 rounded-full hover:bg-[#00CDFE] transition-colors"
-              >
-             Loign
-              </Link>
+              <div className="gap-3 flex">
+                {user.user ? (
+                  <div className="flex gap-3">
                     <Link
-                href="/get-started"
-                className="hidden lg:inline-block bg-[#00CDFE] text-white px-6 py-2 rounded-full hover:bg-[#00CDFE] transition-colors"
-              >
-          Sign UP
-              </Link>
-         </div>
-        
+                      href="/dashboard"
+                      className="text-white bg-[#00CDFE] px-4 py-2 rounded-md"
+                    >
+                      <button>Dashboard</button>
+                    </Link>
+                    <button onClick={handleLogout} className="text-white bg-[#00CDFE] px-4 py-2 rounded-md">
+                      Logout
+                    </button>
+
+                    <Image
+                      src={user.user.image}
+                      alt="User"
+                      width={40}
+                      height={40}
+                      className="object-cover rounded-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex gap-3">
+                    <Link
+                      href="/login"
+                      className="hidden lg:inline-block bg-[#00CDFE] text-white px-6 py-2 rounded-full hover:bg-[#00CDFE] transition-colors"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      href="/get-started"
+                      className="hidden lg:inline-block bg-[#00CDFE] text-white px-6 py-2 rounded-full hover:bg-[#00CDFE] transition-colors"
+                    >
+                      Sign UP
+                    </Link>
+                  </div>
+                )}
+              </div>
 
               {/* Mobile Menu Button */}
               <button className="lg:hidden text-gray-600">

@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
           name: profile?.name,
           image: profile?.picture,
           email: profile?.email,
-          googleId: profile?.clientId,
+          googleId: profile?.sub,
         };
         try {
           const response = await axios.post(

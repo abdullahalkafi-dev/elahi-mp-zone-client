@@ -1,20 +1,21 @@
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { decodeJWT } from './verifyToken';
-import { TUser } from '@/types';
+import { cookies } from "next/headers";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { decodeJWT } from "./verifyToken";
+import { TUser } from "@/types";
+
 
 export const getCurrentUser = async () => {
   try {
     // Detect if running on the server or client
-    const isServer = typeof window === 'undefined';
+    const isServer = typeof window === "undefined";
 
     // Get the token from cookies
     const accessToken = isServer
-      ? cookies().get('accessToken')?.value
-      : Cookies.get('accessToken');
+      ? cookies().get("accessToken")?.value
+      : Cookies.get("accessToken");
 
     if (!accessToken) {
       return null;
@@ -39,7 +40,7 @@ export const getCurrentUser = async () => {
     // Return the user data from the response
     return response.data?.data as TUser;
   } catch (error) {
-    console.error('Error fetching current user:', error);
+    console.error("Error fetching current user:", error);
     return null;
   }
 };
