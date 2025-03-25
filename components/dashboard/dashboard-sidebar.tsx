@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, Package, Settings, Users, BarChart3 } from "lucide-react"
+import { LayoutDashboard, Package, Settings, Users, BarChart3, Home, MessageCircle, File } from "lucide-react"
 
 const sidebarItems = [
   {
@@ -24,7 +24,7 @@ const sidebarItems = [
   {
     title: "Analytics Logs",
     href: "/dashboard/analytic-logs",
-    icon: BarChart3,
+    icon: File,
   },
   {
     title: "Newsletters",
@@ -32,9 +32,14 @@ const sidebarItems = [
     icon: Users,
   },
   {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
+    title: "Feedbacks",
+    href: "/dashboard/feedbacks",
+    icon: MessageCircle,
+  },
+  {
+    title: "Home",
+    href: "/",
+    icon: Home,
   },
 ]
 

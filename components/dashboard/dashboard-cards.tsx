@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAllProductsQuery } from "@/redux/api/features/product/productApi";
+import { useGetAllNewsLetterQuery } from "@/redux/api/features/newsletter/newsletterApi";
 
 export function DashboardCards() {
   const { data, isLoading } = useGetAllProductsQuery(undefined);
-
+ const {data:newsLetterRes}=useGetAllNewsLetterQuery({})
   // Calculate total variants and average price
   const products = data?.data || [];
 
@@ -77,13 +78,13 @@ export function DashboardCards() {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             
-            NewsLetter User
+            NewsLetter Subscribers
           </CardTitle>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           {/* need-work */}
-          <div className="text-2xl font-bold">${totalRevenue}</div>
+          <div className="text-2xl font-bold">${data?.data.length}</div>
         </CardContent>
       </Card>
     </div>

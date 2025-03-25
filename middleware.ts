@@ -9,42 +9,14 @@ export async function middleware(request: NextRequest) {
   // Define allowed paths by role
   const allowedPathsByRole: {
     user: string[];
-    agent: string[];
+
     admin: string[];
   } = {
-    user: [
-      "/user-dashboard",
-      "/profile",
-      "/my-properties",
-      "/favorite-properties",
-      "/bookmarked-products",
-    ],
-    agent: [
-      "/agent-dashboard",
-      "/profile",
-      "/my-properties",
-      "/favorite-properties",
-      "/agent-dashboard/properties-sold",
-      "/add-payment",
-      "/bookmarked-products",
-      "/inquiries",
-    ],
-    admin: [
-      "/profile",
-      "/my-properties",
-      "/favorite-properties",
-      "/admin-dashboard/all-properties",
-      "/admin-dashboard/all-products",
-      "/admin-dashboard/all-users",
-      "/admin-dashboard/all-orders",
-      "/admin-dashboard/newsletters",
-      "/inquiries",
-      "/admin-dashboard/add-product",
-      "/bookmarked-products",
-      "/add-payment",
-    ],
-  };
+    user: ["/feedback"],
 
+    admin: ["/dashboard", "/feedback"],
+  };
+  console.log(user);
   // Redirect unauthenticated users to signup or login
   if (!user) {
     if (!["/signup", "/login"].includes(pathname)) {
@@ -67,10 +39,8 @@ export async function middleware(request: NextRequest) {
 
   // Only restrict paths that don't match the user's role
   if (
-    (!allowedPaths.includes(pathname) &&
-      !(isAdminPath && role === "admin") &&
-      !(isAgentPath && role === "agent")) ||
-    (role === "user" && (isAdminPath || isAgentPath))
+    (!allowedPaths.includes(pathname) && !(isAdminPath && role === "admin")) ||
+    (role === "user" && isAdminPath)
   ) {
     const response = NextResponse.redirect(new URL("/", request.url));
     // response.cookies.delete("accessToken");
@@ -82,14 +52,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/profile",
-    "/signup",
-    "/login",
-    "/user-dashboard",
-    "/my-properties",
-    "/favorite-properties",
-    "/agent-dashboard",
-    "/admin-dashboard",
-  ],
+  matcher: ["/signup", "/login", "/feedback", "/dashboard"],
 };

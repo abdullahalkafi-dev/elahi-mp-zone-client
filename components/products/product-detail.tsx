@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pencil } from "lucide-react"
 import { formatDate } from "@/lib/utils"
+import Image from "next/image"
 
 interface ProductDetailProps {
   product: {
@@ -54,7 +55,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Image</h3>
             <div className="mt-2 w-full max-w-md">
-              <img
+              <Image
+               height={200}
+                width={200}
                 src={product.image || "/placeholder.svg"}
                 alt={product.name}
                 className="rounded-md border object-cover w-full h-auto max-h-[200px]"

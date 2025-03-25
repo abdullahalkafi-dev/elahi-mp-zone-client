@@ -16,20 +16,20 @@ export const getCurrentUser = async () => {
     const accessToken = isServer
       ? cookies().get("accessToken")?.value
       : Cookies.get("accessToken");
-
+ console.log(accessToken);
     if (!accessToken) {
       return null;
     }
 
     const decodedUser = decodeJWT(accessToken);
-
+  console.log(decodedUser);
     if (!decodedUser || !decodedUser._id) {
       return null;
     }
 
     // Fetch the user details from the API using the user ID
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${decodedUser._id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/user/${decodedUser._id}`,
       {
         headers: {
           Authorization: `${accessToken}`,

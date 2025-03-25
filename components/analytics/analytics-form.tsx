@@ -23,6 +23,7 @@ import {
 
 import type { SalesEntry } from "@/app/dashboard/analytics/page";
 import { toast } from "react-toastify";
+import { useCreateAnalyticsMutation } from "@/redux/api/features/analytics/analyticsApi";
 
 interface Product {
   _id: string;
@@ -140,7 +141,7 @@ export function AnalyticsForm({
     setValue,
     reset,
   ]);
-
+  const [createDataHandler, { isLoading }] = useCreateAnalyticsMutation();
   const onFormSubmit = (data: any) => {
     if (!selectedProduct || !selectedVariant) {
       toast.error("Please select a product and variant");
@@ -187,6 +188,16 @@ export function AnalyticsForm({
     };
 
     onSubmit(entry);
+    createDataHandler({
+      product: product.name,
+      variant: variant.variant,
+      singleUnitPrice: price,
+      unitsSold: Number(data.unitsSold),
+      deliveryLoss: Number(data.deliveryLoss),
+      totalSales,
+      totalLoss,
+      totalRevenue,
+    });
 
     toast.success(
       isEditing ? "Entry updated successfully" : "Entry added successfully"
@@ -312,7 +323,7 @@ export function AnalyticsForm({
             <Button
               type="submit"
               className="w-full"
-              disabled={!selectedVariant}
+              disabled={!selectedVariant || isLoading}
             >
               {isEditing ? "Update Entry" : "Add Entry"}
             </Button>

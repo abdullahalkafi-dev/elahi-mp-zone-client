@@ -10,7 +10,7 @@ interface ServiceCardProps {
   image: string
 }
 
-export function ServiceCard({ id, name, description, image }: ServiceCardProps) {
+export function ServiceCard({ id, name, description, image }: any) {
   return (
     <Card className="h-full flex flex-col shadow-lg bg-white border-[#00CDFE]">
       <div className="aspect-[4/3] relative overflow-hidden">

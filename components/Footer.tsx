@@ -16,7 +16,19 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCreateNewsLetterMutation } from "@/redux/api/features/newsletter/newsletterApi";
+import { toast } from "react-toastify";
 const Footer = () => {
+  const [joinNewsletter] = useCreateNewsLetterMutation();
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const res = await joinNewsletter({ email });
+
+    if (res.data.success) {
+      toast.success("You have successfully subscribed to our newsletter");
+    }
+  };
   return (
     <div>
       <footer className="bg-gradient-to-b from-gray-50 to-white pt-20 pb-6">
@@ -42,17 +54,20 @@ const Footer = () => {
                 </p>
 
                 {/* Newsletter Form */}
-                <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="flex-1 h-12 px-4 rounded-xl border-gray-200"
-                  />
-                  <Button className="h-12 px-8 bg-[#00CDFE] hover:bg-[#00cbfea1] text-white rounded-xl font-medium">
-                    Subscribe
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
+                <form onSubmit={onSubmit}>
+                  <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <Input
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      className="flex-1 h-12 px-4 rounded-xl border-gray-200"
+                    />
+                    <Button className="h-12 px-8 bg-[#00CDFE] hover:bg-[#00cbfea1] text-white rounded-xl font-medium">
+                      Subscribe
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </form>
 
                 {/* Social Media Links */}
                 <div className="mt-10">

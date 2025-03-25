@@ -1,0 +1,25 @@
+.whatsappButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #25D366;
+    color: white;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 24px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
+  }
+  
+  .whatsappButton:hover {
+    background-color: #20c15e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(37, 211, 102, 0.4);
+  }
+  
+  .whatsappIcon {
+    display: flex;
+    align-items: center;
+  }

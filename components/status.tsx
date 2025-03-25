@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 
 // Custom hook for counting animation
-const useCounter = (end, start = 0, duration = 2000) => {
+const useCounter = (end:any, start = 0, duration = 2000) => {
   const [count, setCount] = useState(start);
   const countRef = useRef(start);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -13,10 +13,10 @@ const useCounter = (end, start = 0, duration = 2000) => {
     if (!isAnimating) return;
 
     countRef.current = start;
-    let startTime = null;
-    let animationFrame;
+    let startTime:any = null;
+    let animationFrame:any;
 
-    const step = (timestamp) => {
+    const step = (timestamp:any) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
       const value = Math.floor(progress * (end - start) + start);
@@ -37,7 +37,7 @@ const useCounter = (end, start = 0, duration = 2000) => {
 };
 
 // Format number with "K" for thousands
-const formatNumber = (num, suffix = "") => {
+const formatNumber = (num:any, suffix = "") => {
   return num >= 1000
     ? `${(num / 1000).toFixed(0)}K${suffix}`
     : `${num}${suffix}`;
@@ -89,20 +89,23 @@ const Status = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {["products", "collections", "years"].map((key, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <h4 className="text-5xl font-bold text-[#00CDFE]">
-                {formatNumber(counters[key].count, "+")}
-              </h4>
-              <p className="text-lg text-[#424242] mt-2">
-                {key === "products"
-                  ? "Product Sold"
-                  : key === "collections"
-                  ? "Design Collections"
-                  : "Years of Experience"}
-              </p>
-            </div>
-          ))}
+          {["products", "collections", "years"].map((key, index) => {
+            const typedKey = key as keyof typeof counters;
+            return (
+              <div key={index} className="flex flex-col items-center">
+                <h4 className="text-5xl font-bold text-[#00CDFE]">
+                  {formatNumber(counters[typedKey].count, "+")}
+                </h4>
+                <p className="text-lg text-[#424242] mt-2">
+                  {key === "products"
+                    ? "Product Sold"
+                    : key === "collections"
+                    ? "Design Collections"
+                    : "Years of Experience"}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

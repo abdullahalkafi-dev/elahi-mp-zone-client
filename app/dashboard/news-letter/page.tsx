@@ -2,7 +2,7 @@
 
 import { useGetAllNewsLetterQuery } from "@/redux/api/features/newsletter/newsletterApi";
 
-import Link from "next/link";
+
 
 import {
   Table,

@@ -1,5 +1,4 @@
 import { ProductsList } from "@/components/products/products-list"
-import { ProductsHeader } from "@/components/products/products-header"
 
 export default function ProductsPage() {
   return (
@@ -8,7 +7,7 @@ export default function ProductsPage() {
         <h1 className="text-3xl font-bold tracking-tight">Products</h1>
         <p className="text-muted-foreground">Manage your products and their variants</p>
       </div>
-      <ProductsHeader />
+    
       <ProductsList />
     </div>
   )

@@ -29,25 +29,31 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  useDeleteAnalyticsMutation,
+  useGetAllAnalyticsQuery,
+} from "@/redux/api/features/analytics/analyticsApi";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/utils";
 
-interface AnalyticsTableProps {
-  salesData: SalesEntry[];
-  onDelete: (id: string) => void;
-}
-
-export function AnalyticsTable() {
-
+export default function AnalyticsTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
-//    const {data,isLoading }
-  const filteredData = salesData.filter(
-    (entry) =>
-      entry.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      entry.variantName.toLowerCase().includes(searchTerm.toLowerCase())
+  const { data, isLoading } = useGetAllAnalyticsQuery(undefined);
+  const [onDelete] = useDeleteAnalyticsMutation();
+  if (isLoading) {
+    return <Skeleton />;
+  }
+  const allAnalytics = data.data;
+  const filteredData = data.data.filter(
+    (entry: any) =>
+      entry.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.variant.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleDelete = () => {
     if (deleteId) {
+      console.log(deleteId);
       onDelete(deleteId);
       setDeleteId(null);
     }
@@ -80,6 +86,7 @@ export function AnalyticsTable() {
               <TableHead>Total Sales</TableHead>
               <TableHead>Total Loss</TableHead>
               <TableHead>Total Revenue</TableHead>
+              <TableHead>Created At</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -87,19 +94,17 @@ export function AnalyticsTable() {
             {filteredData.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={9} className="text-center h-24">
-                  {salesData.length === 0
+                  {allAnalytics.length === 0
                     ? "No analytics data found. Add your first entry to get started."
                     : "No matching products found."}
                 </TableCell>
               </TableRow>
             ) : (
-              filteredData.map((entry) => (
+              filteredData.map((entry: any) => (
                 <TableRow key={entry.id}>
-                  <TableCell className="font-medium">
-                    {entry.productName}
-                  </TableCell>
-                  <TableCell>{entry.variantName}</TableCell>
-                  <TableCell>${entry.price}</TableCell>
+                  <TableCell className="font-medium">{entry.product}</TableCell>
+                  <TableCell>{entry.variant}</TableCell>
+                  <TableCell>${entry.singleUnitPrice}</TableCell>
                   <TableCell>{entry.unitsSold}</TableCell>
                   <TableCell>{entry.deliveryLoss}</TableCell>
                   <TableCell>${entry.totalSales}</TableCell>
@@ -108,6 +113,9 @@ export function AnalyticsTable() {
                   </TableCell>
                   <TableCell className="text-primary">
                     ${entry.totalRevenue}
+                  </TableCell>
+                  <TableCell className="text-primary">
+                    {formatDate(entry.createdAt)}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -120,7 +128,7 @@ export function AnalyticsTable() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive"
-                          onClick={() => setDeleteId(entry.id)}
+                          onClick={() => setDeleteId(entry._id)}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Delete

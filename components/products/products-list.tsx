@@ -1,14 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
+import { useState } from "react";
+import Link from "next/link";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Skeleton } from "@/components/ui/skeleton"
-import { MoreHorizontal, Pencil, Trash2, Eye, Plus } from "lucide-react"
-import { formatDate } from "@/lib/utils"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Eye,
+  Plus,
+  Search,
+} from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,30 +37,40 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { toast } from "react-toastify"
-import { useDeleteProductMutation, useGetAllProductsQuery } from "@/redux/api/features/product/productApi"
-
+} from "@/components/ui/alert-dialog";
+import { toast } from "react-toastify";
+import {
+  useDeleteProductMutation,
+  useGetAllProductsQuery,
+} from "@/redux/api/features/product/productApi";
+import { Input } from "../ui/input";
 
 export function ProductsList() {
-  const { data, isLoading } = useGetAllProductsQuery({})
-  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation()
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const { data, isLoading } = useGetAllProductsQuery({});
+  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  if (isLoading) {
+    return <Skeleton />;
+  }
 
+  const products = data.data.filter((entry: any) =>
+    entry.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const products = data?.data || []
+  // const products = data?.data || []
 
   const handleDelete = async () => {
     if (deleteId) {
       try {
-        await deleteProduct(deleteId).unwrap()
-        toast.success("Product deleted successfully.")
+        await deleteProduct(deleteId).unwrap();
+        toast.success("Product deleted successfully.");
       } catch (error) {
-        toast.error("An error occurred. Please try again.")
+        toast.error("An error occurred. Please try again.");
       }
-      setDeleteId(null)
+      setDeleteId(null);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -53,11 +82,31 @@ export function ProductsList() {
             <Skeleton key={i} className="h-16 w-full" />
           ))}
       </div>
-    )
+    );
   }
 
   return (
     <>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center justify-between mb-4">
+          <div className="relative max-w-sm">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search products..."
+              className="pl-8 w-full md:w-[300px]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+        <Button asChild>
+          <Link href="/dashboard/products/new">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Product
+          </Link>
+        </Button>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -77,10 +126,12 @@ export function ProductsList() {
                 </TableCell>
               </TableRow>
             ) : (
-              products.map((product:any) => (
+              products.map((product: any) => (
                 <TableRow key={product._id}>
                   <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell className="max-w-xs truncate">{product.description}</TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {product.description}
+                  </TableCell>
                   <TableCell>{formatDate(product.createdAt)}</TableCell>
                   <TableCell>{product.variants?.length || 0}</TableCell>
                   <TableCell className="text-right">
@@ -99,7 +150,9 @@ export function ProductsList() {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/products/edit/${product._id}`}>
+                          <Link
+                            href={`/dashboard/products/edit/${product._id}`}
+                          >
                             <Pencil className="mr-2 h-4 w-4" />
                             Edit
                           </Link>
@@ -127,12 +180,16 @@ export function ProductsList() {
         </Table>
       </div>
 
-      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+      <AlertDialog
+        open={!!deleteId}
+        onOpenChange={(open) => !open && setDeleteId(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the product and all its variants.
+              This action cannot be undone. This will permanently delete the
+              product and all its variants.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -148,6 +205,5 @@ export function ProductsList() {
         </AlertDialogContent>
       </AlertDialog>
     </>
-  )
+  );
 }
-
